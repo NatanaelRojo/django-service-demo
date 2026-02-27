@@ -1,6 +1,5 @@
 from django.urls import path
 
-from employees.controllers import employee_controller
 from employees.controllers.employee_controller import (
     index,
     create,
