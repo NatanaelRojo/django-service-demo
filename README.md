@@ -115,3 +115,47 @@ employee-onboarding/
   ```bash
   python manage.py shell
   ```
+
+**Django Ninja API**
+
+- **What:** The project includes a lightweight REST API implemented with `django-ninja`. The API router is defined in [employees/api.py](employees/api.py) and registered on the main API instance in [config/api.py](config/api.py). The API is mounted at the path configured in [config/urls.py](config/urls.py) (by default `api/v1/`). The current router structure exposes employee endpoints at:
+   - `GET  /api/v1/employees/employees`  — list employees
+   - `POST /api/v1/employees/employees`  — create employee
+   - `PUT  /api/v1/employees/employees/{id}` — update employee
+   - `DELETE /api/v1/employees/employees/{id}` — delete employee
+
+- **Interactive docs:** OpenAPI docs are available at `/api/v1/docs` (Swagger UI) and `/api/v1/redoc` (ReDoc) when the server is running.
+
+- **Quick install & run:**
+
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -U pip
+pip install django django-ninja
+python manage.py migrate
+python manage.py runserver
+```
+
+- **Quick API tests (examples):**
+
+Get all employees:
+
+```bash
+curl -s http://127.0.0.1:8000/api/v1/employees/employees
+```
+
+Create a new employee (JSON payload follows `employees/schemas.py`):
+
+```bash
+curl -X POST http://127.0.0.1:8000/api/v1/employees/employees \
+   -H "Content-Type: application/json" \
+   -d '{"first_name":"Jane","last_name":"Doe","username":"jdoe","password":"secret","id_number":"ID123","position":"Engineer","department":"R&D"}'
+```
+
+Retrieve / update / delete use the same base URL with the numeric employee `id` appended.
+
+- **Notes / tips:**
+   - The request/response shapes are defined in [employees/schemas.py](employees/schemas.py). Adjust the `employees/api.py` router or the `add_router` prefix in [config/api.py](config/api.py) if you want a different URL layout (e.g., avoid the doubled `employees` path).
+   - Use the interactive docs (`/api/v1/docs`) to see available endpoints and example payloads.
+
